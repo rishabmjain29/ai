@@ -1,0 +1,41 @@
+def vaccum_world():
+ goal_state={'a':'1','b':'1'}
+ cost=0;
+ location=input("enter thr location")
+ status=input("enter status of a")
+ status1=input("enter status of b")
+ if location=='a':
+  if status=='1':
+     print("location a is dirty")
+     goal_state['a']=0
+     print("a is been cleaned")
+     cost+=1
+     print("move right") 
+     cost+=1
+     if status1=='1':
+      print("b is dirty")
+      goal_state['b']=0
+      cost+=1
+      print("b is been cleand")
+     else :
+        print("no action")
+ if location=='b':
+   if status1=='1':
+     print("location b is dirty")
+     goal_state['b']=0
+     print("b is been cleaned")
+     cost+=1
+     print("move left") 
+     cost+=1
+     if status=='1':
+      print("a is dirty")
+      print("a is been cleaned")
+      goal_state['a']=0
+      cost+=1
+     else :
+        print("no action")
+ print(cost)
+
+
+
+vaccum_world()
