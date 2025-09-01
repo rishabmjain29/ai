@@ -1,0 +1,72 @@
+goal_state = [[1,2,3],
+              [4,5,6],
+              [7,8,0]]
+
+moves = [(-1,0), (1,0), (0,-1), (0,1)]
+
+def find_blank(state):
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] == 0:
+                return i, j
+
+def generate_moves(state):
+    x, y = find_blank(state)
+    new_states = []
+    for dx, dy in moves:
+        nx, ny = x+dx, y+dy
+        if 0 <= nx < 3 and 0 <= ny < 3:
+            new_state = [row[:] for row in state]
+            new_state[x][y], new_state[nx][ny] = new_state[nx][ny], new_state[x][y]
+            new_states.append(new_state)
+    return new_states
+
+def is_goal(state):
+    return state == goal_state
+
+def is_solvable(state):
+    flat = [num for row in state for num in row if num != 0]
+    inversions = 0
+    for i in range(len(flat)):
+        for j in range(i+1, len(flat)):
+            if flat[i] > flat[j]:
+                inversions += 1
+    return inversions % 2 == 0
+
+def dfs(state, depth, limit, path, visited):
+    if is_goal(state):
+        return path
+    if depth == limit:
+        return None
+    visited.add(str(state))
+    for new_state in generate_moves(state):
+        if str(new_state) not in visited:
+            res = dfs(new_state, depth+1, limit, path+[new_state], visited)
+            if res:
+                return res
+    visited.remove(str(state))
+    return None
+
+def iddfs(start):
+    limit = 0
+    while True:
+        visited = set()
+        result = dfs(start, 0, limit, [start], visited)
+        if result:
+            return result
+        limit += 1
+
+initial_state = [[1, 5, 2],
+                 [4, 8, 3],
+                 [7, 0, 6]]
+
+if is_solvable(initial_state):
+    solution_path = iddfs(initial_state)
+    print("Solution found in", len(solution_path)-1, "moves:")
+    for step, state in enumerate(solution_path):
+        print("Step", step)
+        for row in state:
+            print(row)
+        print()
+else:
+    print("This puzzle is unsolvable.")
